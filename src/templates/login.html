@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar sesión · Agenda{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="auth__card">
+        <div class="auth__title">
+            <h1 class="subheading">Bienvenido de nuevo</h1>
+            <p class="caption" style="font-size:16px;margin-top:8px;">Inicia sesión para ver tu agenda.</p>
+        </div>
+        <div class="card card--featured">
+            <div class="card__body">
+                {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+                <form method="post" action="/views/login">
+                    <div class="field">
+                        <label for="username">Usuario</label>
+                        <input id="username" name="username" class="input" placeholder="tu_usuario" autocomplete="username" required autofocus>
+                    </div>
+                    <div class="field">
+                        <label for="password">Contraseña</label>
+                        <input id="password" name="password" type="password" class="input" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <button class="btn btn--primary btn--block">Iniciar sesión</button>
+                </form>
+            </div>
+        </div>
+        <p class="auth__foot">¿Sin cuenta? Regístrate en <a href="/docs">/docs</a> con <code>POST /auth/register</code></p>
+    </div>
+</section>
+{% endblock %}

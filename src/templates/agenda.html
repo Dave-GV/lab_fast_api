@@ -1,0 +1,88 @@
+<!-- src/templates/agenda.html -->
+{% extends "base.html" %}
+
+{% block title %}Contactos{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero__row">
+        <div>
+            <p class="eyebrow">Hola, @{{ user.username }}</p>
+            <h1 class="display">Tus contactos</h1>
+            <p class="lead">Guarda y organiza a las personas con las que trabajas. Solo tú puedes ver esta lista.</p>
+        </div>
+        <div class="stat">
+            <div class="stat__value">{{ contactos|length }}</div>
+            <div class="stat__label">{{ "contacto" if contactos|length == 1 else "contactos" }}</div>
+        </div>
+    </div>
+</section>
+
+<div class="container grid">
+    <!-- Reto 3: formulario para nuevos contactos -->
+    <aside class="card">
+        <div class="card__header">
+            <h2 class="card-title">Nuevo contacto</h2>
+            <p class="caption">Se agregará a tu agenda personal.</p>
+        </div>
+        <div class="card__body">
+            {% if errores %}
+            <div class="alert" role="alert"><ul>
+                {% for e in errores %}<li>{{ e }}</li>{% endfor %}
+            </ul></div>
+            {% endif %}
+            <form method="post" action="/views/agenda">
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" name="nombre" class="input" placeholder="Ana López" required minlength="2" maxlength="50" value="{{ form.nombre or '' }}">
+                </div>
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <input id="telefono" name="telefono" class="input" placeholder="5551234567" inputmode="numeric" required pattern="\d{7,15}" value="{{ form.telefono or '' }}">
+                    <span class="hint">Solo dígitos, de 7 a 15.</span>
+                </div>
+                <div class="field">
+                    <label for="mail">Correo</label>
+                    <input id="mail" name="mail" type="email" class="input" placeholder="ana@ejemplo.com" required value="{{ form.mail or '' }}">
+                </div>
+                <button class="btn btn--primary btn--block">Agregar contacto</button>
+            </form>
+        </div>
+    </aside>
+
+    <section class="card card--featured">
+        <div class="card__header" style="padding-bottom: 20px;">
+            <h2 class="card-title">Lista de contactos</h2>
+            <p class="caption">Renderizada en el servidor con Jinja2.</p>
+        </div>
+        {% if contactos %}
+        <ul class="list">
+            {% for c in contactos %}
+            <li class="contact">
+                <span class="avatar" aria-hidden="true">{{ c.nombre[:1] }}</span>
+                <div>
+                    <div class="contact__name">{{ c.nombre }}</div>
+                    <div class="contact__meta">
+                        <span>{{ c.telefono }}</span>
+                        <a href="mailto:{{ c.mail }}">{{ c.mail }}</a>
+                    </div>
+                </div>
+                <span class="contact__id">#{{ c.id }}</span>
+                <form method="post" action="/views/agenda/{{ c.id }}/eliminar" onsubmit="return confirm('¿Eliminar a {{ c.nombre|e }}?')">
+                    <button class="btn btn--danger-ghost btn--sm" aria-label="Eliminar {{ c.nombre }}">Eliminar</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty">
+            <div class="empty__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            </div>
+            <p class="card-title">Aún no tienes contactos</p>
+            <p class="caption">Agrega el primero con el formulario.</p>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

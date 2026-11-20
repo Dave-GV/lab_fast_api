@@ -1,0 +1,29 @@
+<!-- src/templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Mi Agenda{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
+</head>
+<body>
+    <header class="nav">
+        <div class="container nav__inner">
+            <a class="brand" href="/views/agenda"><span class="brand__mark" aria-hidden="true"></span>Agenda</a>
+            {% if user %}
+            <form method="post" action="/views/logout" class="nav__user">
+                <span class="nav__name">@{{ user.username }}</span>
+                <span class="avatar" aria-hidden="true">{{ user.username[:1] }}</span>
+                <button class="btn btn--ghost btn--sm">Cerrar sesión</button>
+            </form>
+            {% else %}
+            <a class="btn btn--ghost btn--sm" href="/docs">API docs</a>
+            {% endif %}
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
